@@ -17,7 +17,6 @@ class MovieModel {
   String mediaType;
   List<int> genreIds;
   double popularity;
-  DateTime releaseDate;
   bool video;
   double voteAverage;
   int voteCount;
@@ -34,28 +33,26 @@ class MovieModel {
     required this.mediaType,
     required this.genreIds,
     required this.popularity,
-    required this.releaseDate,
     required this.video,
     required this.voteAverage,
     required this.voteCount,
   });
 
   factory MovieModel.fromJson(Map<String, dynamic> json) => MovieModel(
-        adult: json["adult"],
-        backdropPath: json["backdrop_path"],
-        id: json["id"],
-        title: json["title"],
-        originalLanguage: json["original_language"],
-        originalTitle: json["original_title"],
-        overview: json["overview"],
-        posterPath: json["poster_path"],
-        mediaType: json["media_type"],
-        genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
-        popularity: json["popularity"]?.toDouble(),
-        releaseDate: DateTime.parse(json["release_date"]),
-        video: json["video"],
-        voteAverage: json["vote_average"]?.toDouble(),
-        voteCount: json["vote_count"],
+        adult: json["adult"] ?? false,
+        backdropPath: json["backdrop_path"] ?? "",
+        id: json["id"] ?? 00,
+        title: json["title"] ?? "",
+        originalLanguage: json["original_language"] ?? "",
+        originalTitle: json["original_title"] ?? "",
+        overview: json["overview"] ?? "",
+        posterPath: json["poster_path"] ?? "",
+        mediaType: json["media_type"] ?? "",
+        genreIds: List<int>.from(json["genre_ids"].map((x) => x)) ?? [0, 0, 0],
+        popularity: json["popularity"]?.toDouble() ?? 0.0,
+        video: json["video"] ?? false,
+        voteAverage: json["vote_average"]?.toDouble() ?? 0.0,
+        voteCount: json["vote_count"] ?? 0.0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,8 +67,6 @@ class MovieModel {
         "media_type": mediaType,
         "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
         "popularity": popularity,
-        "release_date":
-            "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
         "video": video,
         "vote_average": voteAverage,
         "vote_count": voteCount,

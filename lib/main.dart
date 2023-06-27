@@ -1,7 +1,5 @@
-// ignore:
-
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 import 'screens/homescreen.dart';
 
@@ -15,7 +13,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       home: const HomeNavigationBar(),
     );
   }
@@ -30,11 +29,17 @@ class HomeNavigationBar extends StatefulWidget {
 
 class _HomeNavigationBarState extends State<HomeNavigationBar> {
   int _selectedIndex = 0;
+  final _controller = NotchBottomBarController(index: 0);
+  final _pageController = PageController(initialPage: 0);
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
+    Text(
+      'Movie',
+      style: optionStyle,
+    ),
     Text(
       'TV',
       style: optionStyle,
@@ -55,38 +60,73 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Movie App"),
+        title: const Text("Player"),
         centerTitle: true,
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: PageView(
+        controller: _pageController,
+        children: _widgetOptions,
+        onPageChanged: (context) => setState(() {
+          _controller.index = context;
+        }),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: HexColor("#c47f68"),
+      extendBody: true,
+      bottomNavigationBar: AnimatedNotchBottomBar(
+        bottomBarItems: const [
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.home,
+              color: Colors.blueGrey,
+            ),
+            activeItem: Icon(
+              Icons.home_filled,
+              color: Colors.white,
+            ),
+            itemLabel: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.movie),
-            label: 'Movie',
-            backgroundColor: HexColor("#9e5555"),
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.movie_outlined,
+              color: Colors.blueGrey,
+            ),
+            activeItem: Icon(
+              Icons.movie,
+              color: Colors.white,
+            ),
+            itemLabel: 'Movie',
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.tv),
-            label: 'TV',
-            backgroundColor: HexColor("#B04759"),
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.tv_outlined,
+              color: Colors.blueGrey,
+            ),
+            activeItem: Icon(
+              Icons.tv,
+              color: Colors.white,
+            ),
+            itemLabel: 'TV',
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.search),
-            label: 'Search',
-            backgroundColor: HexColor("#8BACAA"),
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.search_outlined,
+              color: Colors.blueGrey,
+            ),
+            activeItem: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            itemLabel: 'Search',
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[100],
-        onTap: _onItemtapped,
+        onTap: (index) {
+          _pageController.jumpToPage(_controller.index);
+        },
+        notchBottomBarController: _controller,
+        durationInMilliSeconds: 200,
+        showBlurBottomBar: true,
+        blurOpacity: 0.2,
+        notchColor: Colors.black,
+        color: Colors.black87,
       ),
     );
   }
