@@ -6,21 +6,21 @@ MovieModel movieModelFromJson(String str) =>
 String movieModelToJson(MovieModel data) => json.encode(data.toJson());
 
 class MovieModel {
-  bool? adult;
-  String? backdropPath;
-  int? id;
-  String? title;
-  String? originalLanguage;
-  String? originalTitle;
-  String? overview;
-  String? posterPath;
-  String? mediaType;
-  List<int>? genreIds;
-  double? popularity;
-  DateTime? releaseDate;
-  bool? video;
-  double? voteAverage;
-  int? voteCount;
+  bool adult;
+  String backdropPath;
+  int id;
+  String title;
+  String originalLanguage;
+  String originalTitle;
+  String overview;
+  String posterPath;
+  String mediaType;
+  List<int> genreIds;
+  double popularity;
+  DateTime releaseDate;
+  bool video;
+  double voteAverage;
+  int voteCount;
 
   MovieModel({
     required this.adult,
