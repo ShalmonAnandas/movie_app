@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:movie_app/models/castmodel.dart';
+import 'package:movie_app/models/castModel.dart';
 
 class GetCast {
   getCast(int id, String mediaType) async {
-    // id = 697843;
     String? url;
 
     if (mediaType.toLowerCase() == "movie") {

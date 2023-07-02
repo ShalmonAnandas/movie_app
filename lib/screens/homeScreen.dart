@@ -1,10 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:movie_app/screens/watchmoviescreen.dart';
-import 'package:movie_app/screens/watchshowscreen.dart';
-import 'package:movie_app/utils/getmovies.dart';
-import 'package:movie_app/utils/getshows.dart';
+import 'package:movie_app/screens/watchMovieScreen.dart';
+import 'package:movie_app/screens/watchShowScreen.dart';
+import 'package:movie_app/utils/getTrending.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,8 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  GetMovies getTrendingMoviesObj = GetMovies();
-  GetShows getTrendingShowsObj = GetShows();
+  GetTrending getTrendingMoviesObj = GetTrending();
 
   @override
   void initState() {
@@ -23,11 +21,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getMovies() async {
-    return getTrendingMoviesObj.getTrendingMovies();
+    return getTrendingMoviesObj.getTrending("movie");
   }
 
   getShows() async {
-    return getTrendingShowsObj.getTrendingShows();
+    return getTrendingMoviesObj.getTrending("tv");
   }
 
   @override

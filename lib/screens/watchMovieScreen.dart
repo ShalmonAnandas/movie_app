@@ -1,9 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/moviemodel.dart';
-import 'package:movie_app/utils/getcast.dart';
-import 'package:movie_app/utils/getmovies.dart';
+import 'package:movie_app/models/movieModel.dart';
+import 'package:movie_app/utils/getIndividual.dart';
+
+import '../widgets/castWidget.dart';
 
 class WatchMovieScreen extends StatefulWidget {
   final int id;
@@ -18,23 +19,18 @@ class WatchMovieScreen extends StatefulWidget {
 }
 
 class _WatchMovieScreenState extends State<WatchMovieScreen> {
-  GetCast getCastObj = GetCast();
-  GetMovies getMoviesObj = GetMovies();
+  GetIndividual getMoviesObj = GetIndividual();
   MovieModel? currentMovieModel;
 
   @override
   void initState() {
     super.initState();
-    getCastModels();
     getCurrentMovieModel();
   }
 
-  getCastModels() async {
-    return getCastObj.getCast(widget.id, "movie");
-  }
-
   getCurrentMovieModel() async {
-    MovieModel tempModel = await getMoviesObj.getMovieDetails(widget.id);
+    MovieModel tempModel =
+        await getMoviesObj.getIndividualDetails(widget.id, "movie");
     setState(() {
       currentMovieModel = tempModel;
     });
@@ -109,72 +105,12 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                           )
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: FutureBuilder(
-                          future: getCastModels(),
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            Widget children;
-                            if (snapshot.hasData) {
-                              children = SizedBox(
-                                height: 180,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return InkWell(
-                                      onTap: () {},
-                                      child: SizedBox(
-                                        width: 100,
-                                        child: Card(
-                                          elevation: 0,
-                                          color: Colors.transparent,
-                                          semanticContainer: true,
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          child: Column(
-                                            children: [
-                                              Image.network(
-                                                'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data[index].profilePath}',
-                                                fit: BoxFit.cover,
-                                                height: 136,
-                                              ),
-                                              Text(
-                                                snapshot.data[index].name
-                                                    .split(" ")[0],
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              Text(
-                                                snapshot.data[index].name
-                                                            .split(" ")
-                                                            .length ==
-                                                        1
-                                                    ? ""
-                                                    : snapshot.data[index].name
-                                                        .split(" ")[1],
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            } else {
-                              children = const CircularProgressIndicator();
-                            }
-                            return children;
-                          },
-                        ),
+                      CastWidget(
+                        id: widget.id,
+                        mediaType: "movie",
                       ),
                       const SizedBox(
-                        height: 50,
+                        height: 100,
                       ),
                     ],
                   ),
