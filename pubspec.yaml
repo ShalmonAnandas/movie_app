@@ -14,9 +14,10 @@ dependencies:
   flutter:
     sdk: flutter
   hexcolor: ^3.0.1
-  http: ^1.0.0
+  http: ^0.13.5
   readmore: ^2.2.0
   tap_to_expand: ^0.6.1
+  adblocker_webview: ^1.0.0
 
 dev_dependencies:
   flutter_test:

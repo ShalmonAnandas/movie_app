@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:movie_app/models/movieModel.dart';
+import 'package:movie_app/screens/playMovieScreen.dart';
 import 'package:movie_app/utils/getIndividual.dart';
 
 import '../widgets/castWidget.dart';
@@ -21,11 +22,12 @@ class WatchMovieScreen extends StatefulWidget {
 class _WatchMovieScreenState extends State<WatchMovieScreen> {
   GetIndividual getMoviesObj = GetIndividual();
   MovieModel? currentMovieModel;
+  var movieModel;
 
   @override
   void initState() {
     super.initState();
-    getCurrentMovieModel();
+    movieModel = getCurrentMovieModel();
   }
 
   getCurrentMovieModel() async {
@@ -155,7 +157,16 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MoviePlayer(
+                                      id: snapshot.data.id,
+                                    ),
+                                  ),
+                                );
+                              },
                               child: const Text(
                                 "Watch Now",
                                 style: TextStyle(
