@@ -1,50 +1,63 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:movie_app/models/moviemodel.dart';
+import 'package:movie_app/models/showmodel.dart';
 import 'package:movie_app/utils/getcast.dart';
-import 'package:movie_app/utils/getmovies.dart';
+import 'package:movie_app/utils/getshows.dart';
 
-class WatchMovieScreen extends StatefulWidget {
+class WatchShowScreen extends StatefulWidget {
   final int id;
 
-  const WatchMovieScreen({
+  const WatchShowScreen({
     super.key,
     required this.id,
   });
 
   @override
-  State<WatchMovieScreen> createState() => _WatchMovieScreenState();
+  State<WatchShowScreen> createState() => _WatchShowScreenState();
 }
 
-class _WatchMovieScreenState extends State<WatchMovieScreen> {
+class _WatchShowScreenState extends State<WatchShowScreen> {
   GetCast getCastObj = GetCast();
-  GetMovies getMoviesObj = GetMovies();
-  MovieModel? currentMovieModel;
+  GetShows getShowsObj = GetShows();
+  ShowModel? currentShowModel;
+  List<Widget>? seasonList;
 
   @override
   void initState() {
     super.initState();
     getCastModels();
-    getCurrentMovieModel();
   }
 
   getCastModels() async {
-    return getCastObj.getCast(widget.id, "movie");
+    return getCastObj.getCast(widget.id, "show");
   }
 
-  getCurrentMovieModel() async {
-    MovieModel tempModel = await getMoviesObj.getMovieDetails(widget.id);
-    setState(() {
-      currentMovieModel = tempModel;
-    });
+  getCurrentShowModel() async {
+    ShowModel tempModel = await getShowsObj.getShowDetails(widget.id);
+    print(tempModel.seasons.length);
+    seasonList = List.generate(
+      tempModel.seasons.length,
+      (index) => InkWell(
+        onTap: () {
+          print(tempModel.seasons[index].name.toString());
+        },
+        child: ListTile(
+          title: Text(
+            tempModel.seasons[index].name.toString(),
+            style: const TextStyle(fontSize: 20),
+          ),
+        ),
+      ),
+      growable: true,
+    );
     return tempModel;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<dynamic>(
-      future: getCurrentMovieModel(),
+      future: getCurrentShowModel(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
@@ -92,7 +105,7 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: Center(
                           child: Text(
-                            snapshot.data.title ?? "Movie Name",
+                            snapshot.data.name ?? "Movie Name",
                             style: const TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           ),
@@ -108,6 +121,21 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                                 Text(snapshot.data.overview ?? "{{overview}}"),
                           )
                         ],
+                      ),
+                      OutlinedButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: seasonList!,
+                              );
+                            },
+                          );
+                        },
+                        child: const Text("Select Season"),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
@@ -183,62 +211,11 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                   padding: EdgeInsets.symmetric(vertical: 37),
                   child: BackButton(),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          height: 120,
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.black87,
-                                  Colors.black
-                                ]),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 15),
-                          child: SizedBox(
-                            width: 3000,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                              onPressed: () {},
-                              child: const Text(
-                                "Watch Now",
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

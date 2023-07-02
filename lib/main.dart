@@ -28,9 +28,9 @@ class HomeNavigationBar extends StatefulWidget {
 }
 
 class _HomeNavigationBarState extends State<HomeNavigationBar> {
-  int _selectedIndex = 0;
   final _controller = NotchBottomBarController(index: 0);
   final _pageController = PageController(initialPage: 0);
+  final List<String> appBarTitle = ["Trending", "Movies", "Shows", "Search"];
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -50,19 +50,14 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
     )
   ];
 
-  void _onItemtapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    var theme = ThemeData();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Player"),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   title: Text(appBarTitle[_selectedIndex]),
+      //   centerTitle: true,
+      // ),
       body: PageView(
         controller: _pageController,
         children: _widgetOptions,
@@ -76,44 +71,44 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
           BottomBarItem(
             inActiveItem: Icon(
               Icons.home,
-              color: Colors.blueGrey,
+              color: Colors.deepPurple,
             ),
             activeItem: Icon(
               Icons.home_filled,
-              color: Colors.white,
+              color: Colors.deepPurpleAccent,
             ),
             itemLabel: 'Home',
           ),
           BottomBarItem(
             inActiveItem: Icon(
               Icons.movie_outlined,
-              color: Colors.blueGrey,
+              color: Colors.deepPurple,
             ),
             activeItem: Icon(
               Icons.movie,
-              color: Colors.white,
+              color: Colors.deepPurpleAccent,
             ),
             itemLabel: 'Movie',
           ),
           BottomBarItem(
             inActiveItem: Icon(
               Icons.tv_outlined,
-              color: Colors.blueGrey,
+              color: Colors.deepPurple,
             ),
             activeItem: Icon(
               Icons.tv,
-              color: Colors.white,
+              color: Colors.deepPurpleAccent,
             ),
             itemLabel: 'TV',
           ),
           BottomBarItem(
             inActiveItem: Icon(
               Icons.search_outlined,
-              color: Colors.blueGrey,
+              color: Colors.deepPurple,
             ),
             activeItem: Icon(
               Icons.search,
-              color: Colors.white,
+              color: Colors.deepPurpleAccent,
             ),
             itemLabel: 'Search',
           ),
@@ -123,8 +118,6 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
         },
         notchBottomBarController: _controller,
         durationInMilliSeconds: 200,
-        showBlurBottomBar: true,
-        blurOpacity: 0.2,
         notchColor: Colors.black,
         color: Colors.black87,
       ),

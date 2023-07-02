@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:movie_app/models/moviemodel.dart';
-import 'package:movie_app/models/trendingmoviemodel.dart';
+import 'package:movie_app/models/trendingshowmodel.dart';
+import 'package:movie_app/models/showmodel.dart';
 
-class GetMovies {
-  getTrendingMovies() async {
-    String url =
-        "https://api.themoviedb.org/3/trending/movie/day?language=en-US";
+class GetShows {
+  getTrendingShows() async {
+    String url = "https://api.themoviedb.org/3/trending/tv/day?language=en-US";
     Map<String, String> headers = {
       "accept": "application/json",
       "Authorization":
@@ -17,17 +16,17 @@ class GetMovies {
     http.Response response = await http.get(Uri.parse(url), headers: headers);
     List rawData = jsonDecode(response.body)["results"];
 
-    List<TrendingMovieModel> trendingData = [];
+    List<TrendingShowModel> trendingData = [];
 
     for (var i = 0; i < rawData.length; i++) {
-      trendingData.add(TrendingMovieModel.fromJson(rawData[i]));
+      trendingData.add(TrendingShowModel.fromJson(rawData[i]));
     }
 
     return trendingData;
   }
 
-  getMovieDetails(int id) async {
-    String url = "https://api.themoviedb.org/3/movie/$id?language=en-US";
+  getShowDetails(int id) async {
+    String url = "https://api.themoviedb.org/3/tv/$id?language=en-US";
     Map<String, String> headers = {
       "accept": "application/json",
       "Authorization":
@@ -37,8 +36,8 @@ class GetMovies {
     http.Response response = await http.get(Uri.parse(url), headers: headers);
     var rawData = jsonDecode(response.body);
 
-    MovieModel currentMovieModel = MovieModel.fromJson(rawData);
+    ShowModel currentShowModel = ShowModel.fromJson(rawData);
 
-    return currentMovieModel;
+    return currentShowModel;
   }
 }
