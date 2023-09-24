@@ -8,16 +8,16 @@ environment:
 
 dependencies:
   accordion: ^2.5.1
-  animated_bottom_navigation_bar: ^1.2.0
-  animated_notch_bottom_bar: ^1.0.0
   carousel_slider: ^4.2.1
   flutter:
     sdk: flutter
-  hexcolor: ^3.0.1
   http: ^0.13.5
-  readmore: ^2.2.0
-  tap_to_expand: ^0.6.1
   adblocker_webview: ^1.0.0
+  flashy_tab_bar2: ^0.0.6
+  google_fonts: ^4.0.4
+  lottie: ^2.6.0
+  webview_flutter: ^4.2.4
+
 
 dev_dependencies:
   flutter_test:
@@ -26,3 +26,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/

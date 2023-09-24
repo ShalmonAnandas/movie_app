@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/models/movieModel.dart';
 import 'package:movie_app/screens/playMovieScreen.dart';
 import 'package:movie_app/utils/getIndividual.dart';
+import 'package:movie_app/widgets/similarMediaWidget.dart';
 
 import '../widgets/castWidget.dart';
 
@@ -26,8 +28,8 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
 
   @override
   void initState() {
-    super.initState();
     movieModel = getCurrentMovieModel();
+    super.initState();
   }
 
   getCurrentMovieModel() async {
@@ -41,7 +43,7 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
+    return FutureBuilder(
       future: getCurrentMovieModel(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
@@ -52,7 +54,7 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
-                        'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data.posterPath}',
+                        'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.posterPath}',
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -62,9 +64,14 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                     child: Container(
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.transparent, Colors.black87]),
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.white60,
+                            Colors.white
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -79,9 +86,9 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                         child: Card(
                           semanticContainer: true,
                           clipBehavior: Clip.antiAliasWithSaveLayer,
-                          elevation: 50,
+                          elevation: 30,
                           child: Image.network(
-                            'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data.posterPath}',
+                            'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.posterPath}',
                             height: 400,
                           ),
                         ),
@@ -90,23 +97,32 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: Center(
                           child: Text(
-                            snapshot.data.title ?? "Movie Name",
-                            style: const TextStyle(
+                            snapshot.data?.title ?? "Movie Name",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.quicksand(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                       ExpansionTile(
-                        title: const Text("Synopsis"),
+                        title: Text(
+                          "Synopsis",
+                          style: GoogleFonts.quicksand(
+                              fontWeight: FontWeight.w900),
+                        ),
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 15.0, bottom: 10, right: 10),
-                            child:
-                                Text(snapshot.data.overview ?? "{{overview}}"),
+                            child: Text(
+                              snapshot.data?.overview ?? "{{overview}}",
+                              style: GoogleFonts.quicksand(
+                                  fontWeight: FontWeight.w700),
+                            ),
                           )
                         ],
                       ),
+                      SimilarMoviesWidget(id: widget.id, mediaType: "movie"),
                       CastWidget(
                         id: widget.id,
                         mediaType: "movie",
@@ -127,30 +143,15 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                     children: [
                       Align(
                         alignment: Alignment.bottomCenter,
-                        child: Container(
-                          height: 120,
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.black87,
-                                  Colors.black
-                                ]),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 15.0, horizontal: 15),
                           child: SizedBox(
                             width: 3000,
+                            height: MediaQuery.of(context).size.height * 0.06,
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.black,
+                                backgroundColor: Colors.white,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10),
@@ -162,15 +163,16 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => MoviePlayer(
-                                      id: snapshot.data.id,
+                                      id: snapshot.data!.id,
+                                      name: snapshot.data!.title,
                                     ),
                                   ),
                                 );
                               },
-                              child: const Text(
+                              child: Text(
                                 "Watch Now",
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                                style: GoogleFonts.quicksand(
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
                           ),

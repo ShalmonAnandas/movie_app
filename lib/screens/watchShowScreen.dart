@@ -5,6 +5,7 @@ import 'package:movie_app/models/showModel.dart';
 import 'package:movie_app/utils/getIndividual.dart';
 import 'package:movie_app/utils/getCast.dart';
 import 'package:movie_app/widgets/castWidget.dart';
+import 'package:movie_app/widgets/similarMediaWidget.dart';
 
 class WatchShowScreen extends StatefulWidget {
   final int id;
@@ -78,9 +79,14 @@ class _WatchShowScreenState extends State<WatchShowScreen> {
                     child: Container(
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.transparent, Colors.black87]),
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.white60,
+                            Colors.white
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -137,6 +143,10 @@ class _WatchShowScreenState extends State<WatchShowScreen> {
                           );
                         },
                         child: const Text("Select Season"),
+                      ),
+                      SimilarMoviesWidget(
+                        id: widget.id,
+                        mediaType: "show",
                       ),
                       CastWidget(
                         id: widget.id,

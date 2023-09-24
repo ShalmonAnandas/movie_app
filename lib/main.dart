@@ -1,125 +1,89 @@
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
-
-import 'screens/homeScreen.dart';
+import 'package:movie_app/screens/HomeScreen.dart';
+import 'package:movie_app/screens/trendingMovieScreen.dart';
+import 'package:movie_app/screens/trendingShowScreen.dart';
+import 'package:movie_app/screens/underConstructionScreen.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Movie Please',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
-      home: const HomeNavigationBar(),
+      theme: ThemeData(
+        useMaterial3: true,
+        canvasColor: const Color.fromARGB(255, 232, 234, 222),
+      ),
+      home: const MainScreen(),
     );
   }
 }
 
-class HomeNavigationBar extends StatefulWidget {
-  const HomeNavigationBar({super.key});
+class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeNavigationBar> createState() => _HomeNavigationBarState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _HomeNavigationBarState extends State<HomeNavigationBar> {
-  final _controller = NotchBottomBarController(index: 0);
-  final _pageController = PageController(initialPage: 0);
-  final List<String> appBarTitle = ["Trending", "Movies", "Shows", "Search"];
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    Text(
-      'Movie',
-      style: optionStyle,
-    ),
-    Text(
-      'TV',
-      style: optionStyle,
-    ),
-    Text(
-      'Search',
-      style: optionStyle,
+  List<Widget> tabItems = [
+    const HomeScreen(),
+    const TrendingMovieScreen(),
+    const TrendingShowScreen(),
+    const UnderConstructionScreen(
+      title: "Settings",
     )
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var theme = ThemeData();
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(appBarTitle[_selectedIndex]),
-      //   centerTitle: true,
-      // ),
-      body: PageView(
-        controller: _pageController,
-        children: _widgetOptions,
-        onPageChanged: (context) => setState(() {
-          _controller.index = context;
-        }),
-      ),
-      extendBody: true,
-      bottomNavigationBar: AnimatedNotchBottomBar(
-        bottomBarItems: const [
-          BottomBarItem(
-            inActiveItem: Icon(
-              Icons.home,
-              color: Colors.deepPurple,
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: FlashyTabBar(
+          showElevation: true,
+          animationCurve: Curves.linear,
+          selectedIndex: _selectedIndex,
+          iconSize: 30,
+          onItemSelected: (index) => setState(() {
+            _selectedIndex = index;
+          }),
+          items: [
+            FlashyTabBarItem(
+              icon: const Icon(Icons.home_outlined),
+              title: const Text('Home'),
             ),
-            activeItem: Icon(
-              Icons.home_filled,
-              color: Colors.deepPurpleAccent,
+            FlashyTabBarItem(
+              icon: const Icon(Icons.movie_outlined),
+              title: const Text('Movies'),
             ),
-            itemLabel: 'Home',
-          ),
-          BottomBarItem(
-            inActiveItem: Icon(
-              Icons.movie_outlined,
-              color: Colors.deepPurple,
+            FlashyTabBarItem(
+              icon: const Icon(Icons.tv),
+              title: const Text('Shows'),
             ),
-            activeItem: Icon(
-              Icons.movie,
-              color: Colors.deepPurpleAccent,
+            FlashyTabBarItem(
+              icon: const Icon(Icons.settings_outlined),
+              title: const Text('Settings'),
             ),
-            itemLabel: 'Movie',
-          ),
-          BottomBarItem(
-            inActiveItem: Icon(
-              Icons.tv_outlined,
-              color: Colors.deepPurple,
-            ),
-            activeItem: Icon(
-              Icons.tv,
-              color: Colors.deepPurpleAccent,
-            ),
-            itemLabel: 'TV',
-          ),
-          BottomBarItem(
-            inActiveItem: Icon(
-              Icons.search_outlined,
-              color: Colors.deepPurple,
-            ),
-            activeItem: Icon(
-              Icons.search,
-              color: Colors.deepPurpleAccent,
-            ),
-            itemLabel: 'Search',
-          ),
-        ],
-        onTap: (index) {
-          _pageController.jumpToPage(_controller.index);
-        },
-        notchBottomBarController: _controller,
-        durationInMilliSeconds: 200,
-        notchColor: Colors.black,
-        color: Colors.black87,
+          ],
+        ),
+        body: Center(
+          child: tabItems[_selectedIndex],
+        ),
       ),
     );
   }
