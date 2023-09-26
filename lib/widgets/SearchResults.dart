@@ -43,8 +43,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
               children: [
                 Text(
                   "Search Results",
-                  style: GoogleFonts.quicksand(
-                      fontSize: 30, fontWeight: FontWeight.w500),
+                  style: GoogleFonts.quicksand(fontSize: 30, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -61,56 +60,49 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
       builder: (BuildContext context, AsyncSnapshot<SearchResults> snapshot) {
         Widget children;
         if (snapshot.hasData) {
-          children = SingleChildScrollView(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.707,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, childAspectRatio: 0.65),
-                scrollDirection: Axis.vertical,
-                itemCount: snapshot.data!.results.length - 2,
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      print(
-                          "${snapshot.data?.results[index].mediaType.toString().toLowerCase()}");
-                      if (snapshot.data?.results[index].mediaType
-                              .toString()
-                              .toLowerCase() ==
-                          "mediatype.movie") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WatchMovieScreen(
-                              id: snapshot.data!.results[index].id,
-                            ),
+          children = SizedBox(
+            height: MediaQuery.of(context).size.height * 0.707,
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.65),
+              scrollDirection: Axis.vertical,
+              itemCount: snapshot.data!.results.length - 2,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    print("${snapshot.data?.results[index].mediaType.toString().toLowerCase()}");
+                    if (snapshot.data?.results[index].mediaType.toString().toLowerCase() == "mediatype.movie") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WatchMovieScreen(
+                            id: snapshot.data!.results[index].id,
                           ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WatchShowScreen(
-                              id: snapshot.data!.results[index].id,
-                            ),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WatchShowScreen(
+                            id: snapshot.data!.results[index].id,
                           ),
-                        );
-                      }
-                    },
-                    child: Card(
-                      semanticContainer: true,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: Image.network(
-                        'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.results[index].posterPath}',
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter,
-                      ),
+                        ),
+                      );
+                    }
+                  },
+                  child: Card(
+                    semanticContainer: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Image.network(
+                      'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.results[index].posterPath}',
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           );
         } else {

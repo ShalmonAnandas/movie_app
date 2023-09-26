@@ -33,8 +33,7 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
   }
 
   getCurrentMovieModel() async {
-    MovieModel tempModel =
-        await getMoviesObj.getIndividualDetails(widget.id, "movie");
+    MovieModel tempModel = await getMoviesObj.getIndividualDetails(widget.id, "movie");
     setState(() {
       currentMovieModel = tempModel;
     });
@@ -43,153 +42,143 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getCurrentMovieModel(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return Scaffold(
-            body: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.posterPath}',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.popUntil(context, (route) => route.isFirst);
+        return true;
+      },
+      child: FutureBuilder(
+        future: getCurrentMovieModel(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+              ),
+              floatingActionButton: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.white10, Colors.white60, Colors.white],
                   ),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.white60,
-                            Colors.white
-                          ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 10),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
                         ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MoviePlayer(
+                              id: snapshot.data!.id,
+                              name: snapshot.data!.title,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Watch Now",
+                        style: GoogleFonts.quicksand(fontWeight: FontWeight.w700),
                       ),
                     ),
                   ),
                 ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 90,
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              body: Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.posterPath}',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Colors.white60, Colors.white],
                       ),
-                      Center(
-                        child: Card(
-                          semanticContainer: true,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          elevation: 30,
-                          child: Image.network(
-                            'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.posterPath}',
-                            height: 400,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: Center(
-                          child: Text(
-                            snapshot.data?.title ?? "Movie Name",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.quicksand(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                      ExpansionTile(
-                        title: Text(
-                          "Synopsis",
-                          style: GoogleFonts.quicksand(
-                              fontWeight: FontWeight.w900),
-                        ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15.0, bottom: 10, right: 10),
-                            child: Text(
-                              snapshot.data?.overview ?? "{{overview}}",
-                              style: GoogleFonts.quicksand(
-                                  fontWeight: FontWeight.w700),
+                          Center(
+                            child: Card(
+                              semanticContainer: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              elevation: 30,
+                              child: Image.network(
+                                'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.posterPath}',
+                                height: 400,
+                              ),
                             ),
-                          )
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                            child: Center(
+                              child: Text(
+                                snapshot.data?.title ?? "Movie Name",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.quicksand(fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          ExpansionTile(
+                            initiallyExpanded: true,
+                            title: Text(
+                              "Synopsis",
+                              style: GoogleFonts.quicksand(fontWeight: FontWeight.w900),
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15.0, bottom: 10, right: 10),
+                                child: Text(
+                                  snapshot.data?.overview ?? "{{overview}}",
+                                  style: GoogleFonts.quicksand(fontWeight: FontWeight.w700),
+                                ),
+                              )
+                            ],
+                          ),
+                          SimilarMoviesWidget(id: widget.id, mediaType: "movie"),
+                          CastWidget(
+                            id: widget.id,
+                            mediaType: "movie",
+                          ),
+                          const SizedBox(
+                            height: 100,
+                          ),
                         ],
                       ),
-                      SimilarMoviesWidget(id: widget.id, mediaType: "movie"),
-                      CastWidget(
-                        id: widget.id,
-                        mediaType: "movie",
-                      ),
-                      const SizedBox(
-                        height: 100,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 37),
-                  child: BackButton(),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15.0, horizontal: 15),
-                          child: SizedBox(
-                            width: 3000,
-                            height: MediaQuery.of(context).size.height * 0.06,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MoviePlayer(
-                                      id: snapshot.data!.id,
-                                      name: snapshot.data!.title,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Watch Now",
-                                style: GoogleFonts.quicksand(
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 }

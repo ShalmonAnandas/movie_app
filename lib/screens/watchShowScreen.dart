@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/models/showModel.dart';
+import 'package:movie_app/screens/playMovieScreen.dart';
 import 'package:movie_app/utils/getIndividual.dart';
 import 'package:movie_app/utils/getCast.dart';
 import 'package:movie_app/widgets/castWidget.dart';
@@ -40,16 +42,21 @@ class _WatchShowScreenState extends State<WatchShowScreen> {
     print(tempModel.seasons.length);
     seasonList = List.generate(
       tempModel.seasons.length,
-      (index) => InkWell(
-        onTap: () {
-          print(tempModel.seasons[index].name.toString());
-        },
-        child: ListTile(
-          title: Text(
-            tempModel.seasons[index].name.toString(),
-            style: const TextStyle(fontSize: 20),
+      (index) => Column(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: ListTile(
+              title: Text(
+                tempModel.seasons[index].name.toString(),
+                style: GoogleFonts.quicksand(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w700),
+              ),
+            ),
           ),
-        ),
+          Divider()
+        ],
       ),
       growable: true,
     );
@@ -58,117 +65,159 @@ class _WatchShowScreenState extends State<WatchShowScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
-      future: getCurrentTvModel(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return Scaffold(
-            body: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data.posterPath}',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.white60,
-                            Colors.white
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 90,
-                      ),
-                      Center(
-                        child: Card(
-                          semanticContainer: true,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          elevation: 50,
-                          child: Image.network(
-                            'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data.posterPath}',
-                            height: 400,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: Center(
-                          child: Text(
-                            snapshot.data.name ?? "Movie Name",
-                            style: const TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                      ExpansionTile(
-                        title: const Text("Synopsis"),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 15.0, bottom: 10, right: 10),
-                            child:
-                                Text(snapshot.data.overview ?? "{{overview}}"),
-                          )
-                        ],
-                      ),
-                      OutlinedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: seasonList!,
-                              );
-                            },
-                          );
-                        },
-                        child: const Text("Select Season"),
-                      ),
-                      SimilarMoviesWidget(
-                        id: widget.id,
-                        mediaType: "show",
-                      ),
-                      CastWidget(
-                        id: widget.id,
-                        mediaType: "show",
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                    ],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 37),
-                  child: BackButton(),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.popUntil(context, (route) => route.isFirst);
+        return true;
       },
+      child: FutureBuilder<dynamic>(
+        future: getCurrentTvModel(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+              ),
+              floatingActionButton: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.white10, Colors.white60, Colors.white],
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 10),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        foregroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          showDragHandle: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DraggableScrollableSheet(
+                              expand: true,
+                              minChildSize: 1,
+                              maxChildSize: 1,
+                              initialChildSize: 1,
+                              builder: (BuildContext context, ScrollController scrollController) {
+                                return BackdropFilter(
+                                  filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                                  child: ListView.builder(
+                                    itemCount: seasonList!.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return seasonList![index];
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: Text(
+                        "Select Season",
+                        style: GoogleFonts.quicksand(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              body: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data.posterPath}',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Colors.transparent, Colors.white60, Colors.white],
+                          ),
+                        ),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Center(
+                                child: Card(
+                                  semanticContainer: true,
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  elevation: 50,
+                                  child: Image.network(
+                                    'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data.posterPath}',
+                                    height: 400,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                child: Center(
+                                  child: Text(
+                                    snapshot.data.name ?? "Movie Name",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.quicksand(fontSize: 25, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              ExpansionTile(
+                                title: Text(
+                                  "Synopsis",
+                                  style: GoogleFonts.quicksand(fontWeight: FontWeight.w900),
+                                ),
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15.0, bottom: 10, right: 10),
+                                    child: Text(snapshot.data.overview ?? "{{overview}}"),
+                                  )
+                                ],
+                              ),
+                              SimilarMoviesWidget(
+                                id: widget.id,
+                                mediaType: "show",
+                              ),
+                              CastWidget(
+                                id: widget.id,
+                                mediaType: "show",
+                              ),
+                              const SizedBox(
+                                height: 50,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }

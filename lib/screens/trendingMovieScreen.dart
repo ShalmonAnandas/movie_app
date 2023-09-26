@@ -30,27 +30,7 @@ class _TrendingMovieScreenState extends State<TrendingMovieScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: [
-                Text(
-                  "Trending Movies",
-                  style: GoogleFonts.quicksand(
-                      fontSize: 30, fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-          ),
-          TrendingMovies(),
-        ],
-      ),
-    );
+    return TrendingMovies();
   }
 
   FutureBuilder<dynamic> TrendingMovies() {
@@ -59,40 +39,35 @@ class _TrendingMovieScreenState extends State<TrendingMovieScreen> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         Widget children;
         if (snapshot.hasData) {
-          children = SizedBox(
-            height: MediaQuery.of(context).size.height -
-                MediaQuery.of(context).size.height * 0.2,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, childAspectRatio: 0.65),
-              scrollDirection: Axis.vertical,
-              itemCount: snapshot.data.length - 2,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WatchMovieScreen(
-                          id: snapshot.data[index].id,
-                        ),
+          children = GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.65),
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.data.length - 2,
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WatchMovieScreen(
+                        id: snapshot.data[index].id,
                       ),
-                    );
-                  },
-                  child: Card(
-                    semanticContainer: true,
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Image.network(
-                      'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data[index].posterPath}',
-                      fit: BoxFit.cover,
-                      alignment: Alignment.topCenter,
                     ),
+                  );
+                },
+                child: Card(
+                  semanticContainer: true,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Image.network(
+                    'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data[index].posterPath}',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
         } else {
           children = SizedBox(
