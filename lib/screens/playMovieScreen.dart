@@ -1,52 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/widgets/backButton.dart';
-import 'package:adblocker_webview/adblocker_webview.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:lecle_yoyo_player/lecle_yoyo_player.dart';
 
-class MoviePlayer extends StatefulWidget {
-  final int id;
+class VideoPlayer extends StatefulWidget {
+  final String url;
   final String name;
-  const MoviePlayer({super.key, required this.id, required this.name});
+  const VideoPlayer({super.key, required this.url, required this.name});
 
   @override
-  State<MoviePlayer> createState() => _MoviePlayerState();
+  State<VideoPlayer> createState() => _VideoPlayerState();
 }
 
-class _MoviePlayerState extends State<MoviePlayer> {
-  final WebViewController controller = WebViewController();
-
+class _VideoPlayerState extends State<VideoPlayer> {
   @override
   void initState() {
     super.initState();
-    controller
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
-          onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('https://')) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse('https://vidsrc.to/embed/movie/${widget.id}'));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Watching ${widget.name}"),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: YoYoPlayer(
+          displayFullScreenAfterInit: true,
+          url: widget.url,
+          videoStyle: const VideoStyle(
+            playIcon: Icon(Icons.play_arrow),
+            pauseIcon: Icon(Icons.pause),
+            fullscreenIcon: Icon(Icons.fullscreen),
+            forwardIcon: Icon(Icons.skip_next),
+            backwardIcon: Icon(Icons.skip_previous),
+          ),
+          videoLoadingStyle: const VideoLoadingStyle(
+            loading: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
       ),
-      body: WebViewWidget(controller: controller),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/models/showModel.dart';
 import 'package:movie_app/screens/playMovieScreen.dart';
+import 'package:movie_app/screens/selectEpisodeScreen.dart';
 import 'package:movie_app/utils/getIndividual.dart';
 import 'package:movie_app/utils/getCast.dart';
 import 'package:movie_app/widgets/castWidget.dart';
@@ -47,6 +48,15 @@ class _WatchShowScreenState extends State<WatchShowScreen> {
           InkWell(
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SelectEpisodeScreen(
+                    id: tempModel.id,
+                    seasonNumber: index,
+                  ),
+                ),
+              );
             },
             child: ListTile(
               title: Text(
