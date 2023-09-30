@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app/models/movieModel.dart';
-import 'package:movie_app/screens/playMovieScreen.dart';
 import 'package:movie_app/utils/VidSrcExtractor.dart';
 import 'package:movie_app/utils/getIndividual.dart';
 import 'package:movie_app/widgets/similarMediaWidget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/castWidget.dart';
 
@@ -40,6 +40,16 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
       currentMovieModel = tempModel;
     });
     return tempModel;
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    print(url);
+    if (!await launchUrl(
+      Uri.parse('vlc://$url'),
+      mode: LaunchMode.externalNonBrowserApplication,
+    )) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   @override
@@ -83,15 +93,17 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                         VidSrcExtractor.extract('https://vidsrc.me/embed/movie?tmdb=${snapshot.data!.id}').then(
                           (value) {
                             if (value != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => VideoPlayer(
-                                    name: snapshot.data!.title,
-                                    url: value,
-                                  ),
-                                ),
-                              );
+                              // Fluttertoast.showToast(msg: "link found");
+                              _launchInBrowser(value);
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => VideoPlayer(
+                              //       name: snapshot.data!.title,
+                              //       url: value,
+                              //     ),
+                              //   ),
+                              // );
                             } else {
                               Fluttertoast.showToast(msg: "NOT FOUND");
                             }

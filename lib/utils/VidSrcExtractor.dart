@@ -47,10 +47,11 @@ class VidSrcExtractor {
         }
       }
     }
+    // log(servers.toString());
 
     for (final String server in servers) {
       final String fixedLink = server.replaceAll('https://vidsrc.xyz/', 'https://embedsito.com/');
-
+      // log("fixed link $fixedLink");
       if (fixedLink.contains('/prorcp')) {
         final Response srcResp = await dio.get(
           server,
@@ -67,8 +68,9 @@ class VidSrcExtractor {
         final String? pass = passRegex.firstMatch(respBody)?.group(1)?.replaceAll("^//", 'https://');
 
         if (pass != null && srcm3u8 != null) {
-          videoUrl = LinkResponse(srcm3u8, 'https://vidsrc.stream/', pass, MediaQuality.unknown,
+          videoUrl = LinkResponse(srcm3u8, 'https://vidsrc.stream/', pass, MediaQuality.p_1080,
               title: 'VidSrc', header: {'TE': 'trailers'});
+          // log(videoUrl.url);
           return (videoUrl.url);
         }
       } else {
