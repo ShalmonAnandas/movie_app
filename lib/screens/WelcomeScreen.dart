@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           (searchController.text.length > 2)
               ? SearchResultScreen(searchTerm: searchController.text)
-              : const UnderConstructionScreen(title: "yee"),
+              : const SizedBox.shrink(),
         ],
       ),
     );
