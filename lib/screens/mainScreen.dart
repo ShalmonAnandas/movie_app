@@ -36,12 +36,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            DataConstants.appBarTitle,
-            style: GoogleFonts.quicksand(fontSize: 30, fontWeight: FontWeight.w500),
-          ),
-        ),
         bottomNavigationBar: FlashyTabBar(
           showElevation: true,
           animationCurve: Curves.linear,

@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app/models/trendingMovieModel.dart';
+import 'package:movie_app/utils/DataConstants.dart';
 
 class GetTrending {
   getTrending(String mediaType) async {

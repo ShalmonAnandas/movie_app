@@ -15,12 +15,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Welcome Back",
+          style:
+              GoogleFonts.quicksand(fontSize: 30, fontWeight: FontWeight.w500),
+        ),
+      ),
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 20, bottom: 10),
+            padding: const EdgeInsets.only(
+                left: 10.0, right: 10.0, top: 10, bottom: 10),
             child: TextField(
               controller: searchController,
               style: GoogleFonts.quicksand(fontWeight: FontWeight.w900),
@@ -35,8 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          (searchController.text.length > 2)
-              ? SearchResultScreen(searchTerm: searchController.text)
+          (searchController.text.isNotEmpty)
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 7.0),
+                  child: SearchResultScreen(searchTerm: searchController.text),
+                )
               : const SizedBox.shrink(),
         ],
       ),

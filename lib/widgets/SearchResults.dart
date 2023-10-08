@@ -32,47 +32,27 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: [
-                Text(
-                  "Search Results",
-                  style: GoogleFonts.quicksand(fontSize: 30, fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-          ),
-          TrendingMovies(),
-        ],
-      ),
-    );
-  }
-
-  FutureBuilder<dynamic> TrendingMovies() {
     return FutureBuilder<SearchResults>(
       future: getSearchResults(),
       builder: (BuildContext context, AsyncSnapshot<SearchResults> snapshot) {
         Widget children;
         if (snapshot.hasData) {
           children = SizedBox(
-            height: MediaQuery.of(context).size.height * 0.707,
+            height: MediaQuery.of(context).size.height * 0.770,
             child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.65),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, childAspectRatio: 0.65),
               scrollDirection: Axis.vertical,
-              itemCount: snapshot.data!.results.length - 2,
+              itemCount: snapshot.data!.results.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   onTap: () {
-                    print("${snapshot.data?.results[index].mediaType.toString().toLowerCase()}");
-                    if (snapshot.data?.results[index].mediaType.toString().toLowerCase() == "mediatype.movie") {
+                    if (snapshot.data?.results[index].mediaType
+                            .toString()
+                            .toLowerCase() ==
+                        "mediatype.movie") {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -107,7 +87,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           );
         } else {
           children = SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height * 0.770,
             child: const Center(
               child: CircularProgressIndicator(),
             ),

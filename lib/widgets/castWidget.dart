@@ -31,43 +31,63 @@ class CastWidget extends StatelessWidget {
               Widget children;
               if (snapshot.hasData) {
                 children = SizedBox(
-                  height: 180,
+                  height: MediaQuery.of(context).size.height * 0.23,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {},
-                        child: SizedBox(
-                          width: 100,
-                          child: Card(
-                            elevation: 0,
-                            color: Colors.transparent,
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Column(
-                              children: [
-                                Image.network(
-                                  (snapshot.data[index].profilePath != null)
-                                      ? 'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data[index].profilePath}'
-                                      : "https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg",
-                                  fit: BoxFit.cover,
-                                  height: 130,
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: InkWell(
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => WatchMovieScreen(
+                            //         id: snapshot.data.results[index].id),
+                            //   ),
+                            // );
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.27,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                    (snapshot.data[index].profilePath != null)
+                                        ? 'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data[index].profilePath}'
+                                        : "https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg",
+                                  ),
+                                  fit: BoxFit.cover),
+                            ),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.27,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black12,
+                                    Colors.black
+                                  ],
                                 ),
-                                Text(
-                                  snapshot.data[index].name.split(" ")[0],
-                                  style: GoogleFonts.quicksand(
-                                      fontWeight: FontWeight.w700),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Text(
+                                    snapshot.data[index].name,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.quicksand(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700),
+                                  ),
                                 ),
-                                Text(
-                                  snapshot.data[index].name.split(" ").length ==
-                                          1
-                                      ? ""
-                                      : snapshot.data[index].name.split(" ")[1],
-                                  style: GoogleFonts.quicksand(
-                                      fontWeight: FontWeight.w700),
-                                )
-                              ],
+                              ),
                             ),
                           ),
                         ),

@@ -19,7 +19,7 @@ class GetSearch {
     };
 
     http.Response response = await http.get(Uri.parse(url), headers: headers);
-    print(response.body);
+    // print(response.body);
     SearchResults searchResults = searchResultsFromJson(response.body);
 
     return searchResults;

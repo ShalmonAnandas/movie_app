@@ -35,7 +35,8 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
   }
 
   getCurrentMovieModel() async {
-    MovieModel tempModel = await getMoviesObj.getIndividualDetails(widget.id, "movie");
+    MovieModel tempModel =
+        await getMoviesObj.getIndividualDetails(widget.id, "movie");
     setState(() {
       currentMovieModel = tempModel;
     });
@@ -76,7 +77,8 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 10),
+                  padding: const EdgeInsets.only(
+                      left: 10.0, right: 10, bottom: 10, top: 10),
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
@@ -90,10 +92,12 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                         ),
                       ),
                       onPressed: () {
-                        VidSrcExtractor.extract('https://vidsrc.me/embed/movie?tmdb=${snapshot.data!.id}').then(
+                        VidSrcExtractor.extract(
+                                'https://vidsrc.me/embed/movie?tmdb=${snapshot.data!.id}')
+                            .then(
                           (value) {
                             if (value != null) {
-                              // Fluttertoast.showToast(msg: "link found");
+                              Fluttertoast.showToast(msg: "link found");
                               _launchInBrowser(value);
                               // Navigator.push(
                               //   context,
@@ -112,13 +116,15 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                       },
                       child: Text(
                         "Watch Now",
-                        style: GoogleFonts.quicksand(fontWeight: FontWeight.w700),
+                        style:
+                            GoogleFonts.quicksand(fontWeight: FontWeight.w700),
                       ),
                     ),
                   ),
                 ),
               ),
-              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
               body: Container(
                 height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
@@ -136,7 +142,11 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.white60, Colors.white],
+                        colors: [
+                          Colors.transparent,
+                          Colors.white60,
+                          Colors.white
+                        ],
                       ),
                     ),
                     child: SingleChildScrollView(
@@ -159,7 +169,8 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                               child: Text(
                                 snapshot.data?.title ?? "Movie Name",
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.quicksand(fontSize: 25, fontWeight: FontWeight.bold),
+                                style: GoogleFonts.quicksand(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -167,19 +178,23 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                             initiallyExpanded: true,
                             title: Text(
                               "Synopsis",
-                              style: GoogleFonts.quicksand(fontWeight: FontWeight.w900),
+                              style: GoogleFonts.quicksand(
+                                  fontWeight: FontWeight.w900),
                             ),
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 15.0, bottom: 10, right: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 15.0, bottom: 10, right: 10),
                                 child: Text(
                                   snapshot.data?.overview ?? "{{overview}}",
-                                  style: GoogleFonts.quicksand(fontWeight: FontWeight.w700),
+                                  style: GoogleFonts.quicksand(
+                                      fontWeight: FontWeight.w700),
                                 ),
                               )
                             ],
                           ),
-                          SimilarMoviesWidget(id: widget.id, mediaType: "movie"),
+                          SimilarMoviesWidget(
+                              id: widget.id, mediaType: "movie"),
                           CastWidget(
                             id: widget.id,
                             mediaType: "movie",

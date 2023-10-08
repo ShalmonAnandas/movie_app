@@ -203,7 +203,7 @@ class KnownFor {
         popularity: json["popularity"]?.toDouble(),
         releaseDate: DateTime.parse(json["release_date"]),
         video: json["video"],
-        voteAverage: json["vote_average"],
+        voteAverage: json["vote_average"].round(),
         voteCount: json["vote_count"],
       );
 

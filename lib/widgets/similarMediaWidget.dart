@@ -34,7 +34,7 @@ class SimilarMoviesWidget extends StatelessWidget {
               Widget children;
               if (snapshot.hasData) {
                 children = SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.23,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: snapshot.data?.results?.length,
@@ -46,7 +46,8 @@ class SimilarMoviesWidget extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => WatchMovieScreen(id: snapshot.data.results[index].id),
+                                builder: (context) => WatchMovieScreen(
+                                    id: snapshot.data.results[index].id),
                               ),
                             );
                           },
@@ -56,7 +57,9 @@ class SimilarMoviesWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                               image: DecorationImage(
                                   image: NetworkImage(
-                                    (snapshot.data?.results?[index].posterPath != null)
+                                    (snapshot.data?.results?[index]
+                                                .posterPath !=
+                                            null)
                                         ? 'https://image.tmdb.org/t/p/w600_and_h900_bestv2${snapshot.data?.results?[index].posterPath}'
                                         : "https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg",
                                   ),
@@ -69,19 +72,31 @@ class SimilarMoviesWidget extends StatelessWidget {
                                 gradient: const LinearGradient(
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
-                                  colors: [Colors.transparent, Colors.black12, Colors.black],
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black12,
+                                    Colors.black
+                                  ],
                                 ),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Align(
                                   alignment: Alignment.bottomCenter,
                                   child: Text(
-                                    (snapshot.data.results[index].mediaType == "movie")
-                                        ? snapshot.data?.results![index].title ?? ""
-                                        : snapshot.data?.results![index].originalName ?? "",
+                                    (snapshot.data.results[index].mediaType ==
+                                            "movie")
+                                        ? snapshot
+                                                .data?.results![index].title ??
+                                            ""
+                                        : snapshot.data?.results![index]
+                                                .originalName ??
+                                            "",
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.quicksand(fontWeight: FontWeight.w900, color: Colors.white),
+                                    style: GoogleFonts.quicksand(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white),
                                   ),
                                 ),
                               ),
