@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,13 +44,11 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
     return tempModel;
   }
 
-  Future<void> _launchInBrowser(String url) async {
-    print(url);
-    if (!await launchUrl(
-      Uri.parse('vlc://$url'),
-      mode: LaunchMode.externalNonBrowserApplication,
-    )) {
-      throw Exception('Could not launch $url');
+  Future<void> launchVLCDeepLink(String videoUrl) async {
+    Uri vlcAppUrl = Uri.parse("vlc://$videoUrl");
+
+    if (!await launchUrl(vlcAppUrl)) {
+      throw Exception('Could not launch $vlcAppUrl');
     }
   }
 
@@ -95,10 +94,12 @@ class _WatchMovieScreenState extends State<WatchMovieScreen> {
                         VidSrcExtractor.extract(
                                 'https://vidsrc.me/embed/movie?tmdb=${snapshot.data!.id}')
                             .then(
-                          (value) {
+                          (value) async {
                             if (value != null) {
-                              Fluttertoast.showToast(msg: "link found");
-                              _launchInBrowser(value);
+                              print(value);
+                              // if (platform.isAndroid) {
+                              launchVLCDeepLink(value);
+                              // }
                               // Navigator.push(
                               //   context,
                               //   MaterialPageRoute(
